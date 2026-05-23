@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FIFA GAME — Football Simulation</title>
+  <link rel="stylesheet" href="/src/cinematic.css" />
+</head>
+<body>
+  <canvas id="game-canvas"></canvas>
+
+  <!-- LOADING -->
+  <div id="loading-screen" class="screen active">
+    <div class="loading-logo">FIFA GAME</div>
+    <div class="progress-wrap"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="progress-label" id="progress-label">INITIALIZING...</div>
+  </div>
+
+  <!-- MAIN MENU -->
+  <div id="main-menu" class="screen">
+    <div class="menu-container">
+      
+      <!-- Top Header Area -->
+      <div class="menu-header">
+        <div class="logo-group">
+          <div class="menu-title">FIFA <span class="neon-green">GAME</span></div>
+          <div class="menu-subtitle">FOOTBALL SIMULATION</div>
+        </div>
+        <button class="mbtn season-btn" id="btn-season-mode">🌐 Season Mode</button>
+      </div>
+
+      <!-- Main Columns Grid -->
+      <div class="menu-grid">
+        
+        <!-- Left Column: Match Setup & Quick Match -->
+        <div class="menu-column-left">
+          
+          <!-- MATCH SETUP Frosted Card -->
+          <div class="info-card match-setup-card">
+            <div class="card-header-lbl">MATCH SETUP</div>
+            <div class="match-setup-vs">
+              <div class="vs-badge-col">
+                <div class="vs-badge" id="setup-home-badge">B</div>
+                <div class="vs-team-name" id="setup-home-name">FC Barcelona</div>
+              </div>
+              <div class="vs-divider">VS</div>
+              <div class="vs-badge-col">
+                <div class="vs-badge" id="setup-away-badge">R</div>
+                <div class="vs-team-name" id="setup-away-name">Real Madrid</div>
+              </div>
+            </div>
+            
+            <div class="team-select-row">
+              <div class="team-select-col">
+                <select id="select-home-team" class="premium-select">
+                  <option value="BAR" selected>FC Barcelona</option>
+                  <option value="RMA">Real Madrid</option>
+                  <option value="MCI">Manchester City</option>
+                  <option value="LIV">Liverpool</option>
+                  <option value="ARS">Arsenal</option>
+                  <option value="FCB">Bayern Munich</option>
+                  <option value="PSG">PSG</option>
+                </select>
+              </div>
+              <div class="team-select-col">
+                <select id="select-away-team" class="premium-select">
+                  <option value="BAR">FC Barcelona</option>
+                  <option value="RMA" selected>Real Madrid</option>
+                  <option value="MCI">Manchester City</option>
+                  <option value="LIV">Liverpool</option>
+                  <option value="ARS">Arsenal</option>
+                  <option value="FCB">Bayern Munich</option>
+                  <option value="PSG">PSG</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons Group -->
+          <div class="menu-left-btns">
+            <button class="mbtn primary setup-quickmatch-btn" id="btn-quickmatch">▶ QUICK MATCH</button>
+            
+            <div class="weather-row">
+              <button class="mbtn secondary weather-btn" id="btn-snow-toggle">❄ Snow: On</button>
+              <button class="mbtn secondary weather-btn" id="btn-rain-toggle">🌧 Rain: Off</button>
+            </div>
+            
+            <button class="mbtn secondary setup-extra-btn" id="btn-adjustfield">
+              <span class="icon">⚙</span> Adjust Field / Models
+            </button>
+            <button class="mbtn secondary setup-extra-btn" id="btn-controls">
+              <span class="icon">🎮</span> Controls
+            </button>
+            <button class="mbtn secondary setup-extra-btn" id="btn-leaderboard">
+              <span class="icon">🏆</span> Leaderboard
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Right Column: Settings, Custom Models, Switching -->
+        <div class="menu-column-right">
+          
+          <!-- Controls Card -->
+          <div class="info-card">
+            <strong>⌨ CONTROLS</strong>
+            <div class="controls-grid">
+              <div class="control-key-row">
+                <span class="key-tag">WASD</span>
+                <span class="key-desc">Move</span>
+              </div>
+              <div class="control-key-row">
+                <span class="key-tag">SHIFT</span>
+                <span class="key-desc">Sprint</span>
+              </div>
+              <div class="control-key-row">
+                <span class="key-tag">SPACE</span>
+                <span class="key-desc">Pass</span>
+              </div>
+              <div class="control-key-row">
+                <span class="key-tag">E</span>
+                <span class="key-desc">Shot</span>
+              </div>
+              <div class="control-key-row">
+                <span class="key-tag">Q</span>
+                <span class="key-desc">Switch</span>
+              </div>
+              <div class="control-key-row">
+                <span class="key-tag">R</span>
+                <span class="key-desc">Lob</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Custom Models Card -->
+          <div class="info-card">
+            <strong>📦 CUSTOM MODELS</strong>
+            <p class="card-text">Drop <code>stadium.glb</code> and <code>player.glb</code> in <code>/public/</code>, then enable in the Adjust panel.</p>
+            <div class="status-table">
+              <div class="status-row">
+                <span class="status-lbl">Stadium</span>
+                <span class="status-val">Default</span>
+              </div>
+              <div class="status-row">
+                <span class="status-lbl">Players</span>
+                <span class="status-val">Default</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Player Switching Card -->
+          <div class="info-card">
+            <strong>👥 PLAYER SWITCHING</strong>
+            <p class="card-text">Press <strong>SPACE</strong> (no ball) to switch to nearest player. <strong>Blue ring</strong> = controlled player.</p>
+            <div class="indicator-row">
+              <div class="blue-ring-icon"></div>
+              <span class="indicator-desc">Active player indicator</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- HUD -->
+  <div id="hud">
+    <div class="scoreboard">
+      <div class="sb-team home">
+        <div class="sb-badge" id="home-badge">BAR</div>
+        <div class="sb-name" id="home-name">BARCELONA</div>
+        <div class="sb-score" id="home-score">0</div>
+      </div>
+      <div class="sb-mid">
+        <div class="sb-time" id="match-time">00:00</div>
+        <div class="sb-half" id="half-ind">1ST HALF</div>
+        <div style="display:flex;gap:3px;margin-top:3px;justify-content:center;min-height:10px;" id="card-row-home"></div>
+        <div style="display:flex;gap:3px;margin-top:2px;justify-content:center;min-height:10px;" id="card-row-away"></div>
+      </div>
+      <div class="sb-team away">
+        <div class="sb-score" id="away-score">0</div>
+        <div class="sb-name" id="away-name">REAL MADRID</div>
+        <div class="sb-badge" id="away-badge">RMA</div>
+      </div>
+    </div>
+
+    <div class="player-card">
+      <div class="pc-label">CONTROLLED</div>
+      <div class="pc-name" id="pc-name">LEWANDOWSKI</div>
+      <div class="pc-pos" id="pc-pos">ST · BARCELONA</div>
+      <div class="stamina-row">
+        <span class="stamina-lbl">FIT</span>
+        <div class="stamina-track"><div class="stamina-fill" id="stamina-fill" style="width:100%"></div></div>
+      </div>
+    </div>
+
+    <div class="controls-hint">
+      <div class="ctrl"><span class="key">WASD</span> Move</div>
+      <div class="ctrl"><span class="key">SHIFT</span> Sprint</div>
+      <div class="ctrl"><span class="key">SPACE</span> Hold: Pass Power</div>
+      <div class="ctrl"><span class="key">E</span> Hold: Shot Power</div>
+      <div class="ctrl"><span class="key">Q</span> Switch Player</div>
+      <div class="ctrl"><span class="key">R</span> Lob Shot</div>
+      <div class="ctrl"><span class="key">F</span> First Person</div>
+      <div class="ctrl"><span class="key">ESC</span> Pause</div>
+    </div>
+
+    <!-- MOBILE CONTROL INTERFACE -->
+    <div id="mobile-hud-overlay">
+      <!-- Top Bar Controls -->
+      <div class="mobile-top-bar">
+        <button id="mbtn-fps" class="m-top-btn">📹 CAM</button>
+        <button id="mbtn-pause" class="m-top-btn">⏸ PAUSE</button>
+      </div>
+
+      <!-- Virtual Touch Joystick (Bottom Left) -->
+      <div id="joystick-container">
+        <div id="joystick-base">
+          <div id="joystick-knob"></div>
+        </div>
+      </div>
+
+      <!-- Tactical Action Buttons (Bottom Right) -->
+      <div id="mobile-action-pad">
+        <div class="action-btn-wrapper">
+          <button id="mbtn-lob" class="action-btn lob-btn">Lob</button>
+          <span class="btn-sub-label">R</span>
+        </div>
+        <div class="action-btn-wrapper">
+          <button id="mbtn-switch" class="action-btn switch-btn">Switch</button>
+          <span class="btn-sub-label">Q</span>
+        </div>
+        <div class="action-btn-wrapper">
+          <button id="mbtn-sprint" class="action-btn sprint-btn">Sprint</button>
+          <span class="btn-sub-label">Shift</span>
+        </div>
+        <div class="action-btn-wrapper">
+          <button id="mbtn-pass" class="action-btn pass-btn">Pass</button>
+          <span class="btn-sub-label">Space</span>
+        </div>
+        <div class="action-btn-wrapper">
+          <button id="mbtn-shoot" class="action-btn shoot-btn">Shoot</button>
+          <span class="btn-sub-label">E</span>
+        </div>
+      </div>
+
+      <!-- Mobile Penalty Shootout Controls (Shown only during penalty) -->
+      <div id="mobile-penalty-pad">
+        <button id="mbtn-pen-left" class="action-btn pen-move-btn">◀ Move L</button>
+        <button id="mbtn-pen-shoot" class="action-btn pen-shoot-btn">⚽ SHOOT</button>
+        <button id="mbtn-pen-right" class="action-btn pen-move-btn">Move R ▶</button>
+      </div>
+    </div>
+
+
+    <!-- FPS active indicator -->
+    <div id="fps-indicator" style="
+      position:absolute; top:12px; left:50%; transform:translateX(-50%);
+      color:#fff; font-size:11px; font-family:monospace; letter-spacing:2px;
+      text-shadow:0 0 6px #000; pointer-events:none;
+    "></div>
+
+    <!-- FPS crosshair -->
+    <div id="fps-crosshair" style="
+      display:none; position:fixed; top:50%; left:50%;
+      transform:translate(-50%,-50%); pointer-events:none;
+      color:rgba(255,255,255,0.85); font-size:22px; line-height:1;
+      text-shadow:0 0 4px #000;
+    ">+</div>
+
+    <!-- Ball possession indicator -->
+    <div id="ball-hud" style="
+      position:absolute; bottom:100px; left:50%; transform:translateX(-50%);
+      font-family:'Barlow Condensed',sans-serif; font-size:1rem; font-weight:900;
+      letter-spacing:4px; text-transform:uppercase; color:#ffcc00;
+      background:rgba(0,0,0,0.72); backdrop-filter:blur(8px);
+      border:2px solid rgba(255,204,0,0.7); border-radius:5px;
+      padding:7px 20px; pointer-events:none; opacity:0;
+      transition:opacity 0.25s;
+    ">⚽ ON BALL</div>
+
+    <!-- Screen edge glow when in possession -->
+    <div id="possession-glow" style="
+      position:fixed; inset:0; pointer-events:none; z-index:44;
+      box-shadow: inset 0 0 90px rgba(255,204,0,0);
+      transition: box-shadow 0.35s ease;
+    "></div>
+
+    <div class="radar-wrap">
+      <div class="radar-label">MINIMAP</div>
+      <canvas id="radar-canvas" width="180" height="115"></canvas>
+    </div>
+  </div>
+
+  <!-- POWER BAR -->
+  <div id="power-bar-wrap">
+    <div id="power-bar-label">PASS POWER</div>
+    <div class="power-track"><div id="power-fill"></div></div>
+  </div>
+
+  <!-- MSG BANNER -->
+  <div id="msg-banner"></div>
+
+  <!-- REPLAY OVERLAY -->
+  <div id="replay-overlay">⏪ SLOW MOTION REPLAY</div>
+
+  <!-- YELLOW CARD -->
+  <div id="yellow-card-overlay">
+    <div class="yc-card"></div>
+    <div class="yc-title">YELLOW CARD</div>
+    <div class="yc-sub" id="yc-team-text">FOUL COMMITTED</div>
+    <div class="yc-count" id="yc-count-text">1 MORE = PENALTY</div>
+  </div>
+
+  <!-- PENALTY INTRO -->
+  <div id="penalty-overlay">
+    <div class="pen-title">PENALTY!</div>
+    <div class="pen-sub" id="penalty-sub-text">YOU MUST DEFEND</div>
+    <div class="pen-hint" id="penalty-hint-text">Get ready...</div>
+  </div>
+
+  <!-- PENALTY HUD -->
+  <div id="penalty-hud">
+    <div class="pen-hud-hint" id="penalty-hud-hint">A/D MOVE GK · SPACE = THEY SHOOT</div>
+  </div>
+
+  <!-- ACCURACY SLIDER -->
+  <div id="accuracy-slider-wrap">
+    <div class="acc-label">AIM ACCURACY — PRESS SPACE TO SHOOT</div>
+    <div class="acc-track">
+      <div class="acc-indicator" id="acc-indicator" style="left:50%"></div>
+    </div>
+    <div class="acc-zones">
+      <span>CORNER</span><small>miss</small><span>CORNER</span>
+    </div>
+  </div>
+
+  <!-- PENALTY RESULT -->
+  <div id="penalty-result-overlay">
+    <div class="pen-result-text" id="penalty-result-text" style="color:#44dd44">SAVED!</div>
+    <div class="pen-result-sub" id="penalty-result-sub"></div>
+  </div>
+
+  <!-- GOAL -->
+  <div id="goal-overlay">
+    <div class="goal-text">GOAL!</div>
+    <div class="goal-scorer-name" id="goal-scorer"></div>
+    <div class="goal-score-display" id="goal-score-disp">0 — 0</div>
+  </div>
+
+  <!-- PAUSE -->
+  <div id="pause-menu" class="screen">
+    <div class="pause-title">PAUSED</div>
+    <div class="pause-btns">
+      <button class="mbtn primary" id="btn-resume">Resume</button>
+      <button class="mbtn secondary" id="btn-restart">Restart Match</button>
+      <button class="mbtn secondary" id="btn-quit">Quit to Menu</button>
+    </div>
+  </div>
+
+  <!-- FULLTIME -->
+  <div id="fulltime-screen" class="screen">
+    <div class="ft-label">FULL TIME</div>
+    <div class="ft-teams" id="ft-teams">BARCELONA VS REAL MADRID</div>
+    <div class="ft-score" id="ft-score">0 — 0</div>
+    <div class="ft-result" id="ft-result">DRAW</div>
+    <button class="mbtn primary" style="min-width:220px;text-align:center" id="btn-playagain">Play Again</button>
+  </div>
+
+  <!-- FIELD ADJUST PANEL -->
+  <div id="adjust-panel">
+    <div class="ap-title">⚙ FIELD & MODEL ADJUST</div>
+
+    <div class="ap-section">PITCH POSITION</div>
+    <div class="slider-row">
+      <label>X Offset</label>
+      <input type="range" id="sl-pitch-x" min="-30" max="30" value="0" step="0.5">
+      <span class="val" id="vl-pitch-x">0</span>
+    </div>
+    <div class="slider-row">
+      <label>Y Offset</label>
+      <input type="range" id="sl-pitch-y" min="-10" max="10" value="0" step="0.1">
+      <span class="val" id="vl-pitch-y">0</span>
+    </div>
+    <div class="slider-row">
+      <label>Z Offset</label>
+      <input type="range" id="sl-pitch-z" min="-30" max="30" value="0" step="0.5">
+      <span class="val" id="vl-pitch-z">0</span>
+    </div>
+    <div class="slider-row">
+      <label>Rotate Y</label>
+      <input type="range" id="sl-pitch-rot" min="-180" max="180" value="0" step="1">
+      <span class="val" id="vl-pitch-rot">0°</span>
+    </div>
+    <div class="slider-row">
+      <label>Scale</label>
+      <input type="range" id="sl-pitch-scale" min="0.5" max="2" value="1" step="0.05">
+      <span class="val" id="vl-pitch-scale">1.0</span>
+    </div>
+
+    <div class="ap-section">STADIUM MODEL</div>
+    <div class="slider-row">
+      <label>Enable</label>
+      <input type="checkbox" id="cb-stadium" style="margin-left:4px;cursor:pointer;">
+      <span class="val" id="vl-stadium">OFF</span>
+    </div>
+    <div class="slider-row">
+      <label>Sta. Y</label>
+      <input type="range" id="sl-sta-y" min="-20" max="20" value="0" step="0.5">
+      <span class="val" id="vl-sta-y">0</span>
+    </div>
+    <div class="slider-row">
+      <label>Sta. Scale</label>
+      <input type="range" id="sl-sta-scale" min="0.001" max="5" value="1" step="0.001">
+      <span class="val" id="vl-sta-scale">1.0</span>
+    </div>
+    <div class="slider-row">
+      <label>Sta. RotY</label>
+      <input type="range" id="sl-sta-rot" min="-180" max="180" value="0" step="1">
+      <span class="val" id="vl-sta-rot">0°</span>
+    </div>
+    <div class="slider-row">
+      <label>Hide Pitch</label>
+      <input type="checkbox" id="cb-hide-pitch" style="margin-left:4px;cursor:pointer;">
+      <span class="val">OFF</span>
+    </div>
+
+    <div class="ap-section">PLAYER MODEL</div>
+    <div class="slider-row">
+      <label>Enable</label>
+      <input type="checkbox" id="cb-player" style="margin-left:4px;cursor:pointer;">
+      <span class="val" id="vl-player">OFF</span>
+    </div>
+    <div class="slider-row">
+      <label>Scale</label>
+      <input type="range" id="sl-plr-scale" min="0.001" max="3" value="1" step="0.001">
+      <span class="val" id="vl-plr-scale">1.0</span>
+    </div>
+    <div class="slider-row">
+      <label>RotY</label>
+      <input type="range" id="sl-plr-rot" min="-180" max="180" value="0" step="1">
+      <span class="val" id="vl-plr-rot">0°</span>
+    </div>
+    <div class="slider-row">
+      <label>Y Offset</label>
+      <input type="range" id="sl-plr-y" min="-5" max="5" value="0" step="0.05">
+      <span class="val" id="vl-plr-y">0</span>
+    </div>
+
+    <div class="ap-section">GOAL POSITION</div>
+    <div class="slider-row">
+      <label>Goal Y</label>
+      <input type="range" id="sl-goal-y" min="-5" max="5" value="0" step="0.05">
+      <span class="val" id="vl-goal-y">0</span>
+    </div>
+
+    <div style="margin-top:12px;display:flex;gap:6px;">
+      <button class="mbtn primary" id="btn-apply" style="flex:1;font-size:0.75rem;padding:6px 10px;text-align:center;">Apply</button>
+      <button class="mbtn secondary" id="btn-close-panel" style="flex:1;font-size:0.75rem;padding:6px 10px;text-align:center;">Close</button>
+    </div>
+  </div>
+
+  <!-- Adboard -->
+  <div class="adboard">
+    <div class="adboard-scroll">
+      FIFA GAME · FIFA GAME AND FIFE GAME SIMULATION · CONQUER THE PITCH · SEASON 2026 · PLAY BEAUTIFUL ·&nbsp;&nbsp;&nbsp;
+      FIFA GAME · FIFA GAME AND FIFE GAME SIMULATION · CONQUER THE PITCH · SEASON 2026 · PLAY BEAUTIFUL ·&nbsp;&nbsp;&nbsp;
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
